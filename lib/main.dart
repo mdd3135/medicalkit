@@ -1,11 +1,25 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:medicalkit/Values.dart';
 import 'package:medicalkit/mqtt.dart';
+import 'package:medicalkit/showMedication.dart';
 import 'package:medicalkit/thresholdPage.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
+  http.get(Uri.parse("${Values.springUrl}/query")).then(
+    (response) {
+      String resBodyutf8 = utf8.decode(response.bodyBytes);
+      Map<String, dynamic> resMap = jsonDecode(resBodyutf8);
+      List<dynamic> content = resMap["content"];
+      for (int i = 0; i < content.length; i++) {
+        Map<String, dynamic> item = content[i];
+        Values.medication.add(item);
+      }
+    },
+  );
   runApp(const MyApp());
 }
 
@@ -33,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     Mqtt.mqttStart();
-    Timer.periodic(const Duration(milliseconds: 200), (timer) {
+    Timer.periodic(const Duration(milliseconds: 100), (timer) {
       setState(() {});
     });
   }
@@ -46,7 +60,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: Center(
           child: Container(
-            margin: const EdgeInsets.all(30),
+            margin: const EdgeInsets.all(20),
             child: Column(
               children: [
                 Row(
@@ -127,13 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         margin: const EdgeInsets.only(right: 10),
                         alignment: AlignmentDirectional.centerEnd,
                         // alignment: AlignmentDirectional.centerEnd,
-                        child: Switch(
-                            value: Values.fanState,
-                            onChanged: (state) {
-                              setState(() {
-                                Values.fanState = state;
-                              });
-                            })),
+                        child: Icon(Values.fanState == true ? Icons.done : Icons.close)),
                   ]),
                 ),
                 Container(
@@ -146,7 +154,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         backgroundColor:
                             const Color.fromARGB(110, 76, 175, 79)),
                     onPressed: (() {
-                      Navigator.of(context).push(MaterialPageRoute(builder: ((context) => ThresholdPage())));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: ((context) => const ThresholdPage())));
                     }),
                     child: const Padding(
                         padding: EdgeInsets.all(10),
@@ -165,7 +174,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         shadowColor: Colors.transparent,
                         backgroundColor:
                             const Color.fromARGB(110, 76, 175, 79)),
-                    onPressed: (() {}),
+                    onPressed: (() {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const ShowMedication()));
+                    }),
                     child: const Padding(
                         padding: EdgeInsets.all(10),
                         child: Text(

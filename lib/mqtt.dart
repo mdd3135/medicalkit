@@ -66,12 +66,20 @@ class Mqtt {
         Values.temperature = utf8.decode(resPayload.payload.message);
       } else if (resTopic == "humidity") {
         Values.humidity = utf8.decode(resPayload.payload.message);
+      } else if (resTopic == "fanStatus") {
+        //nodmcu只发0或1
+        if (utf8.decode(resPayload.payload.message) == "0") {
+          Values.fanState = false;
+        }else if(utf8.decode(resPayload.payload.message) == "1"){
+          Values.fanState = true;
+        }
       }
       print("resTopic = $resTopic  resPayload = $resPayload");
     });
     //subscribe
     client.subscribe("temperature", MqttQos.exactlyOnce);
     client.subscribe("humidity", MqttQos.exactlyOnce);
+    client.subscribe("fanStatus", MqttQos.exactlyOnce);
   }
 
   static String getRandomString(int length) {
