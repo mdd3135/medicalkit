@@ -6,7 +6,7 @@ import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 
 class Mqtt {
-  static MqttServerClient client = MqttServerClient(Values.brokerIp, "1883");
+  static MqttServerClient client = MqttServerClient.withPort(Values.brokerIp, "10722", 10722);
 
   static Future<void> onDisconnected() async {
     print('OnDisconnected client callback - Client disconnection');

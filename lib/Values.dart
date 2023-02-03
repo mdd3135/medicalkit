@@ -1,6 +1,6 @@
 class Values {
-  static String springUrl = "http://192.168.43.166:8080";
-  static String brokerIp = "39.101.65.141";
+  static String springUrl = "http://ywj-tmp.vip.cpolar.top";
+  static String brokerIp = "1.tcp.vip.cpolar.top";
   static String temperature = "25.2C";
   static String humidity = "49%";
   static bool fanState = false;
