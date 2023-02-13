@@ -141,7 +141,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         margin: const EdgeInsets.only(right: 10),
                         alignment: AlignmentDirectional.centerEnd,
                         // alignment: AlignmentDirectional.centerEnd,
-                        child: Icon(Values.fanState == true ? Icons.done : Icons.close)),
+                        child: Icon(Values.fanState == true
+                            ? Icons.done
+                            : Icons.close)),
                   ]),
                 ),
                 Container(
@@ -149,10 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        shadowColor: Colors.transparent,
-                        backgroundColor:
-                            const Color.fromARGB(110, 76, 175, 79)),
+                        backgroundColor: Color.fromARGB(255, 186, 231, 188)),
                     onPressed: (() {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: ((context) => const ThresholdPage())));
@@ -161,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         padding: EdgeInsets.all(10),
                         child: Text(
                           "改变温度阈值",
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 18, color: Colors.black),
                         )),
                   ),
                 ),
@@ -170,10 +169,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.black,
-                        shadowColor: Colors.transparent,
                         backgroundColor:
-                            const Color.fromARGB(110, 76, 175, 79)),
+                            Color.fromARGB(255, 186, 231, 188)),
                     onPressed: (() {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const ShowMedication()));
@@ -182,7 +179,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         padding: EdgeInsets.all(10),
                         child: Text(
                           "查看药箱内药品",
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 18, color: Colors.black),
                         )),
                   ),
                 ),

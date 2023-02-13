@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medicalkit/Values.dart';
+import 'package:medicalkit/mqtt.dart';
 
 class ThresholdPage extends StatefulWidget {
   const ThresholdPage({super.key});
@@ -44,19 +45,19 @@ class _ThresholdPageState extends State<ThresholdPage> {
                 margin: const EdgeInsets.all(10),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      shadowColor: Colors.transparent,
-                      backgroundColor: const Color.fromARGB(110, 76, 175, 79)),
+                      backgroundColor: const Color.fromARGB(255, 186, 231, 188)),
                   onPressed: (() {
                     Values.tempThreshold = double.parse(tempThreshould);
                     Values.humiThreshold = double.parse(humiThreshould);
+                    Mqtt.toPublish("tempThreshold", tempThreshould);
+                    Mqtt.toPublish("humiThreshold", humiThreshould);
                     Navigator.of(context).pop();
                   }),
                   child: const Padding(
                       padding: EdgeInsets.all(10),
                       child: Text(
                         "确定",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: Colors.black),
                       )),
                 ),
               )

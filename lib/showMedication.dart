@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:medicalkit/Values.dart';
 import 'package:medicalkit/camera.dart';
 import 'package:medicalkit/detailMedication.dart';
+import 'package:medicalkit/mqtt.dart';
 
 class ShowMedication extends StatefulWidget {
   const ShowMedication({super.key});
@@ -27,11 +28,17 @@ class _ShowMedication extends State<ShowMedication> {
               child: ListView.builder(
                   itemCount: Values.medication.length,
                   itemBuilder: ((context, index) {
+                    String beep = "0";
+                    if (nowDateTime.compareTo(DateTime.parse(Values
+                            .medication[index]["expiration"]
+                            .toString())) >
+                        0) {
+                      beep = "1";
+                      Mqtt.toPublish("beep", "1");
+                    }
+
                     return Container(
-                      color: nowDateTime.compareTo(DateTime.parse(Values
-                                  .medication[index]["expiration"]
-                                  .toString())) >
-                              0
+                      color: beep == "1"
                           ? Color.fromARGB(127, 244, 67, 54)
                           : Colors.transparent,
                       child: ListTile(
