@@ -1,12 +1,17 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:math';
+import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
 import 'package:medicalkit/Values.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 
 class Mqtt {
-  static MqttServerClient client = MqttServerClient.withPort(Values.brokerIp, "10722", 10722);
+  static MqttServerClient client =
+      MqttServerClient.withPort(Values.brokerIp, "107221", 10722);
 
   static Future<void> onDisconnected() async {
     print('OnDisconnected client callback - Client disconnection');
@@ -59,7 +64,8 @@ class Mqtt {
       print('Client connected');
     }
 
-    Mqtt.client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
+    Mqtt.client.updates!
+        .listen((List<MqttReceivedMessage<MqttMessage?>>? c) async {
       final resPayload = c![0].payload as MqttPublishMessage;
       final resTopic = c[0].topic;
       if (resTopic == "temperature") {
@@ -70,8 +76,21 @@ class Mqtt {
         //nodmcu只发0或1
         if (utf8.decode(resPayload.payload.message) == "0") {
           Values.fanState = false;
-        }else if(utf8.decode(resPayload.payload.message) == "1"){
+        } else if (utf8.decode(resPayload.payload.message) == "1") {
           Values.fanState = true;
+        }
+      } else if (resTopic == "esp32Picture") {
+        //图像处理
+        print("image lenth:${resPayload.payload.message.length}");
+        String codebar;
+        try {
+          Values.camData = Uint8List.fromList(resPayload.payload.message);
+          codebar = await scanner
+              .scanBytes(Values.camData);
+          print(codebar);
+        } catch (e) {
+          print(e);
+          print("no image recognize");
         }
       }
       print("resTopic = $resTopic  resPayload = $resPayload");
@@ -80,6 +99,7 @@ class Mqtt {
     client.subscribe("temperature", MqttQos.exactlyOnce);
     client.subscribe("humidity", MqttQos.exactlyOnce);
     client.subscribe("fanStatus", MqttQos.exactlyOnce);
+    client.subscribe("esp32Picture", MqttQos.exactlyOnce);
   }
 
   static String getRandomString(int length) {

@@ -39,7 +39,7 @@ class _ShowMedication extends State<ShowMedication> {
 
                     return Container(
                       color: beep == "1"
-                          ? Color.fromARGB(127, 244, 67, 54)
+                          ? const Color.fromARGB(127, 244, 67, 54)
                           : Colors.transparent,
                       child: ListTile(
                         onTap: () {

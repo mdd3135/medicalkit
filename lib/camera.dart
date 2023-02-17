@@ -48,7 +48,6 @@ class _CameraState extends State<Camera> {
       // await _initializeControllerFuture;
       // image = await _controller.takePicture();
       // barcode = await scanner.scanPath(image.path);
-
       barcode = (await scanner.scan())!;
     } catch (e) {
       showDialog(
